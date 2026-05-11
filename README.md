@@ -1,5 +1,6 @@
 
 
+
 Tecnologías utilizadas
 
 Python
@@ -65,3 +66,4 @@ Autor
 
 Héctor Delgado
 
+ (actualización del README)
