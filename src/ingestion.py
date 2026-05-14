@@ -3,28 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 
-EXPECTED_COLUMNS = [
-    "company_name",
-    "responsibility",
-    "date_review",
-    "job_title",
-    "employment_details",
-    "location",
-    "overall_rating",
-    "work_life_balance",
-    "culture_values",
-    "diversity_inclusion",
-    "career_opp",
-    "comp_benefits",
-    "senior_mgmt",
-    "recommend",
-    "ceo_approv",
-    "outlook",
-    "headline",
-    "pros",
-    "cons",
-    "source",
-]
+REQUIRED_TEXT_COLUMNS = ["headline", "pros", "cons"]
 
 
 def load_glassdoor_csv(csv_path: str) -> pd.DataFrame:
@@ -34,7 +13,6 @@ def load_glassdoor_csv(csv_path: str) -> pd.DataFrame:
         raise FileNotFoundError(f"CSV file not found: {csv_path}")
 
     encodings_to_try = ["utf-8", "utf-8-sig", "latin1", "ISO-8859-1", "cp1252"]
-
     last_error = None
 
     for encoding in encodings_to_try:
@@ -59,24 +37,99 @@ def load_glassdoor_csv(csv_path: str) -> pd.DataFrame:
     )
 
 
-def validate_expected_columns(df: pd.DataFrame) -> None:
-    missing_columns = set(EXPECTED_COLUMNS) - set(df.columns)
+def validate_dataframe_input(df: pd.DataFrame) -> None:
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError("Input must be a pandas DataFrame.")
+
+    if df.empty:
+        raise ValueError("Input DataFrame is empty.")
+
+
+def validate_required_text_columns(df: pd.DataFrame) -> None:
+    missing_columns = set(REQUIRED_TEXT_COLUMNS) - set(df.columns)
 
     if missing_columns:
-        raise ValueError(f"Missing required columns: {sorted(missing_columns)}")
+        raise ValueError(f"Missing required text columns: {sorted(missing_columns)}")
+
+
+def select_required_text_columns(df: pd.DataFrame) -> pd.DataFrame:
+    return df[REQUIRED_TEXT_COLUMNS].copy()
+
+
+def cast_text_columns(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    for column in REQUIRED_TEXT_COLUMNS:
+        df[column] = df[column].fillna("").astype(str)
+
+    return df
+
+
+def remove_invalid_records(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    initial_rows = len(df)
+
+    df = df.drop_duplicates()
+
+    df = df[
+        df[REQUIRED_TEXT_COLUMNS]
+        .apply(lambda row: any(value.strip() for value in row), axis=1)
+    ].copy()
+
+    removed_rows = initial_rows - len(df)
+    print(f"Invalid or duplicated records removed: {removed_rows}")
+
+    return df
+
+
+def build_review_text(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    df["review_text"] = (
+        df["headline"].str.strip()
+        + " "
+        + df["pros"].str.strip()
+        + " "
+        + df["cons"].str.strip()
+    ).str.strip()
+
+    df = df[df["review_text"].str.len() > 0].copy()
+
+    return df
+
+
+def run_data_ingestion(csv_path: str) -> pd.DataFrame:
+    df = load_glassdoor_csv(csv_path)
+
+    validate_dataframe_input(df)
+    validate_required_text_columns(df)
+
+    df = select_required_text_columns(df)
+    df = cast_text_columns(df)
+    df = remove_invalid_records(df)
+    df = build_review_text(df)
+
+    return df
 
 
 def main() -> None:
     csv_path = "data/raw/glassdoor_comments.csv"
 
-    df = load_glassdoor_csv(csv_path)
-    validate_expected_columns(df)
+    df = run_data_ingestion(csv_path)
 
-    print("CSV loaded successfully.")
+    print("CSV loaded and validated successfully.")
     print(f"Rows: {df.shape[0]}")
     print(f"Columns: {df.shape[1]}")
-    print("\nColumns:")
+
+    print("\nColumns used for analysis:")
     print(df.columns.tolist())
+
+    print("\nText fields sample:")
+    print(df[["headline", "pros", "cons", "review_text"]].head())
+
+    print("\nData types:")
+    print(df.dtypes)
 
 
 if __name__ == "__main__":
