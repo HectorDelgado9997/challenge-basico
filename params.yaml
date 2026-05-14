@@ -1,0 +1,21 @@
+data:
+  input_path: "data/raw/glassdoor_comments.csv"
+  sentiment_results_path: "data/processed/glassdoor_sentiment_results.csv"
+
+outputs:
+  report_path: "outputs/reports/model_comparison_report.txt"
+  figure_path: "outputs/figures/sentiment_distribution.png"
+
+mlflow:
+  tracking_uri: "http://127.0.0.1:5000"
+  experiment_name: "glassdoor_sentiment_analysis"
+  run_name: "vader_vs_pysentimiento_pipeline"
+
+pipeline:
+  text_columns:
+    - "headline"
+    - "pros"
+    - "cons"
+  sentiment_input_column: "sentiment_text"
+  vader_threshold_positive: 0.05
+  vader_threshold_negative: -0.05
