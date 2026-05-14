@@ -1,0 +1,16 @@
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+nltk
+spacy
+langdetect
+vaderSentiment
+pysentimiento
+transformers
+torch
+jupyter
+notebook
+ipykernel
+python-dotenv
