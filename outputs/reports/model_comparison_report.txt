@@ -1,0 +1,17 @@
+Glassdoor Sentiment Analysis - Model Comparison Report
+============================================================
+
+Agreement rate between VADER and pysentimiento: 0.7397
+
+Sentiment distribution by model:
+          vader  pysentimiento
+positive   2942           2195
+negative    434            852
+neutral      89            418
+
+Cross-tabulation: VADER vs pysentimiento
+pysentimiento  negative  neutral  positive
+vader                                     
+negative            354       50        30
+neutral              23       55        11
+positive            475      313      2154
