@@ -1,69 +1,69 @@
+# Analysis of Comments on Glassdoor
 
+## Project Overview
 
+This project develops a Natural Language Processing pipeline for sentiment analysis applied to Glassdoor company reviews.
 
-Tecnologías utilizadas
+The analysis focuses exclusively on three textual fields:
 
-Python
-Git
-GitHub
-VS Code
+- `headline`
+- `pros`
+- `cons`
 
-Flujo de trabajo
+These fields are combined into a single corpus column named `review_text`, which is then processed and used for sentiment classification.
 
-Crear la estructura inicial del proyecto.
-Cargar o preparar los datos necesarios.
-Desarrollar la solución.
-Documentar el procedimiento.
-Subir el repositorio a GitHub.
+The solution compares two sentiment analysis approaches:
 
-Estado del proyecto
+- **VADER** as a lexical baseline model.
+- **pysentimiento** as the main transformer-based sentiment classifier.
 
-En desarrollo.
+The project also includes local experiment tracking using **MLflow**.
 
-Autor
+---
 
-Héctor Delgado
-
-# Challenge básico
-
-## Descripción
-
-Repositorio correspondiente al **Challenge básico**.
-
-Este proyecto forma parte de una serie de ejercicios prácticos diseñados para fortalecer habilidades en programación, análisis de datos y control de versiones con Git y GitHub.
-
-## Objetivo
-
-Desarrollar una solución clara, ordenada y reproducible para el reto planteado, aplicando buenas prácticas de organización de código, documentación y versionamiento.
-
-## Estructura del repositorio
+## Repository Structure
 
 ```text
 challenge-basico/
-├── README.md
 ├── data/
+│   ├── raw/
+│   │   └── glassdoor_comments.csv
+│   └── processed/
+├── docs/
+│   ├── model_construction.md
+│   ├── mlops.md
+│   └── results.md
 ├── notebooks/
+├── outputs/
+│   ├── figures/
+│   │   └── sentiment_distribution.png
+│   └── reports/
+│       └── model_comparison_report.txt
 ├── src/
-└── outputs/
+│   ├── ingestion.py
+│   ├── preprocessing.py
+│   ├── sentiment_vader.py
+│   ├── sentiment_pysentimiento.py
+│   ├── run_sentiment_analysis.py
+│   ├── evaluation.py
+│   └── mlflow_pipeline.py
+├── .gitignore
+├── params.yaml
+├── README.md
+└── requirements.txt
 
-Tecnologías utilizadas
+
+## Tech used
 
 Python
 Git
 GitHub
 VS Code
-Flujo de trabajo
-Crear la estructura inicial del proyecto.
-Cargar o preparar los datos necesarios.
-Desarrollar la solución.
-Documentar el procedimiento.
-Subir el repositorio a GitHub.
-Estado del proyecto
 
-En desarrollo.
+Project Status:
+Completed.
 
-Autor
+Author:
+Héctor Manuel Delgado Zambrano
 
-Héctor Delgado
 
- (actualización del README)
