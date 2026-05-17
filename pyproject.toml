@@ -1,0 +1,17 @@
+[project]
+name = "challenge-basico"
+version = "0.1.0"
+description = "Glassdoor Sentiment Analysis using VADER and pysentimiento with MLflow tracking"
+requires-python = ">=3.9"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
