@@ -6,7 +6,7 @@
 [![VADER](https://img.shields.io/badge/VADER-Lexical-yellow)](https://github.com/cjhutto/vaderSentiment)
 [![pysentimiento](https://img.shields.io/badge/pysentimiento-Transformer-purple)](https://github.com/pysentimiento/pysentimiento)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](LICENSE)
-
+[![CI](https://github.com/HectorDelgado9997/challenge-basico/actions/workflows/ci.yml/badge.svg)](https://github.com/HectorDelgado9997/challenge-basico/actions/workflows/ci.yml)
 ## 📌 Descripcion
 
 Pipeline de analisis de sentimiento sobre reviews de empleados de Glassdoor.
