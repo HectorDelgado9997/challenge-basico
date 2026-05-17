@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from exceptions import DataIngestionError
 from logger import get_logger
 
 
@@ -14,7 +15,7 @@ def load_glassdoor_csv(csv_path: str) -> pd.DataFrame:
     path = Path(csv_path)
 
     if not path.exists():
-        raise FileNotFoundError(f"CSV file not found: {csv_path}")
+        raise DataIngestionError(f"CSV file not found: {csv_path}")
 
     encodings_to_try = ["utf-8", "utf-8-sig", "latin1", "ISO-8859-1", "cp1252"]
     last_error = None
@@ -24,7 +25,9 @@ def load_glassdoor_csv(csv_path: str) -> pd.DataFrame:
             df = pd.read_csv(path, encoding=encoding)
 
             if df.empty:
-                raise ValueError("The CSV file was loaded, but the DataFrame is empty.")
+                raise DataIngestionError(
+                    "The CSV file was loaded, but the DataFrame is empty."
+                )
 
             logger.info("CSV loaded using encoding: %s", encoding)
             return df
@@ -32,28 +35,26 @@ def load_glassdoor_csv(csv_path: str) -> pd.DataFrame:
         except UnicodeDecodeError as error:
             last_error = error
 
-    raise UnicodeDecodeError(
-        "utf-8",
-        b"",
-        0,
-        1,
-        f"Unable to decode CSV with tested encodings. Last error: {last_error}",
+    raise DataIngestionError(
+        f"Unable to decode CSV with tested encodings. Last error: {last_error}"
     )
 
 
 def validate_dataframe_input(df: pd.DataFrame) -> None:
     if not isinstance(df, pd.DataFrame):
-        raise TypeError("Input must be a pandas DataFrame.")
+        raise DataIngestionError("Input must be a pandas DataFrame.")
 
     if df.empty:
-        raise ValueError("Input DataFrame is empty.")
+        raise DataIngestionError("Input DataFrame is empty.")
 
 
 def validate_required_text_columns(df: pd.DataFrame) -> None:
     missing_columns = set(REQUIRED_TEXT_COLUMNS) - set(df.columns)
 
     if missing_columns:
-        raise ValueError(f"Missing required text columns: {sorted(missing_columns)}")
+        raise DataIngestionError(
+            f"Missing required text columns: {sorted(missing_columns)}"
+        )
 
 
 def select_required_text_columns(df: pd.DataFrame) -> pd.DataFrame:
@@ -100,32 +101,44 @@ def build_review_text(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df[df["review_text"].str.len() > 0].copy()
 
+    if df.empty:
+        raise DataIngestionError(
+            "DataFrame is empty after building review_text."
+        )
+
     return df
 
 
 def run_data_ingestion(csv_path: str) -> pd.DataFrame:
-    df = load_glassdoor_csv(csv_path)
+    try:
+        df = load_glassdoor_csv(csv_path)
 
-    validate_dataframe_input(df)
-    validate_required_text_columns(df)
+        validate_dataframe_input(df)
+        validate_required_text_columns(df)
 
-    df = select_required_text_columns(df)
-    df = cast_text_columns(df)
-    df = remove_invalid_records(df)
-    df = build_review_text(df)
+        df = select_required_text_columns(df)
+        df = cast_text_columns(df)
+        df = remove_invalid_records(df)
+        df = build_review_text(df)
 
-    logger.info("Data ingestion completed. Rows: %d", df.shape[0])
+        logger.info("Data ingestion completed. Rows: %d", df.shape[0])
 
-    return df
+        return df
+
+    except DataIngestionError:
+        raise
+
+    except Exception as error:
+        logger.exception("Unexpected error during data ingestion")
+        raise DataIngestionError(
+            f"Unexpected error during data ingestion: {error}"
+        ) from error
 
 
 def main() -> None:
     csv_path = "data/raw/glassdoor_comments.csv"
-
     df = run_data_ingestion(csv_path)
-
     logger.info("Columns: %s", df.columns.tolist())
-    logger.info("Sample review_text: %s", df["review_text"].iloc[0])
 
 
 if __name__ == "__main__":
