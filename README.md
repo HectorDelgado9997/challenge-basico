@@ -1,4 +1,4 @@
-# 💬 Glassdoor Sentiment Analysis — Challenge Basico
+#  Glassdoor Sentiment Analysis — Challenge Basico
 
 [![Status](https://img.shields.io/badge/Status-Completado-brightgreen)](https://github.com/HectorDelgado9997/challenge-basico)
 [![Python](https://img.shields.io/badge/Python-3.9+-blue)](https://www.python.org/)
@@ -7,7 +7,7 @@
 [![pysentimiento](https://img.shields.io/badge/pysentimiento-Transformer-purple)](https://github.com/pysentimiento/pysentimiento)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](LICENSE)
 [![CI](https://github.com/HectorDelgado9997/challenge-basico/actions/workflows/ci.yml/badge.svg)](https://github.com/HectorDelgado9997/challenge-basico/actions/workflows/ci.yml)
-## 📌 Descripcion
+##  Descripcion
 
 Pipeline de analisis de sentimiento sobre reviews de empleados de Glassdoor.
 El sistema compara dos enfoques complementarios:
@@ -20,7 +20,7 @@ y el pipeline mide el nivel de acuerdo entre ambos enfoques.
 
 ---
 
-## 🎯 Objetivo
+##  Objetivo
 
 Analizar el sentimiento de reviews de Glassdoor usando dos metodologias
 distintas, comparar sus resultados, y registrar todo el experimento
@@ -28,7 +28,7 @@ automaticamente con MLflow.
 
 ---
 
-## 📁 Estructura del Repositorio
+##  Estructura del Repositorio
 
 ```text
 challenge-basico/
@@ -64,7 +64,7 @@ challenge-basico/
 
 ---
 
-## 🤖 Modelos
+##  Modelos
 
 | Modelo | Tipo | Descripcion |
 |---|---|---|
@@ -81,7 +81,7 @@ challenge-basico/
 
 ---
 
-## 🔤 Preprocesamiento
+##  Preprocesamiento
 
 El pipeline aplica **dos normalizaciones distintas** sobre el mismo texto:
 
@@ -92,7 +92,7 @@ El pipeline aplica **dos normalizaciones distintas** sobre el mismo texto:
 
 ---
 
-## 📊 Dataset
+##  Dataset
 
 | Propiedad | Valor |
 |---|---|
@@ -104,7 +104,7 @@ El pipeline aplica **dos normalizaciones distintas** sobre el mismo texto:
 
 ---
 
-## ⚙️ Instalacion y Ejecucion Rapida
+##  Instalacion y Ejecucion Rapida
 
 ```bash
 # 1. Clonar el repositorio
@@ -131,7 +131,7 @@ python mlflow_pipeline.py
 
 ---
 
-## 🔁 Pipeline Completoglassdoor_comments.csv
+##  Pipeline Completoglassdoor_comments.csv
 │
 ▼
 Ingestion → validacion + build review_text
@@ -154,7 +154,7 @@ MLflow → params + metrics + artifacts registrados
 
 ---
 
-## 📈 Metricas Registradas en MLflow
+##  Metricas Registradas en MLflow
 
 | Metrica | Descripcion |
 |---|---|
@@ -170,7 +170,7 @@ MLflow → params + metrics + artifacts registrados
 
 ---
 
-## 🧪 Tests
+##  Tests
 
 ```bash
 pytest -v
@@ -178,7 +178,7 @@ pytest -v
 
 ---
 
-## 📚 Documentacion
+##  Documentacion
 
 | Archivo | Contenido |
 |---|---|
@@ -191,7 +191,7 @@ pytest -v
 
 ---
 
-## 🛠️ Stack Tecnologico
+##  Stack Tecnologico
 
 | Herramienta | Uso |
 |---|---|
@@ -208,7 +208,7 @@ pytest -v
 
 ---
 
-## 👤 Autor
+##  Autor
 
-**Hector Delgado**
+**Héctor Manuel Delgado Zambrano**
 [![GitHub](https://img.shields.io/badge/GitHub-HectorDelgado9997-black)](https://github.com/HectorDelgado9997)
