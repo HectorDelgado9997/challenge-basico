@@ -2,6 +2,10 @@ from pathlib import Path
 
 import pandas as pd
 
+from logger import get_logger
+
+
+logger = get_logger(__name__)
 
 REQUIRED_TEXT_COLUMNS = ["headline", "pros", "cons"]
 
@@ -22,7 +26,7 @@ def load_glassdoor_csv(csv_path: str) -> pd.DataFrame:
             if df.empty:
                 raise ValueError("The CSV file was loaded, but the DataFrame is empty.")
 
-            print(f"CSV loaded using encoding: {encoding}")
+            logger.info("CSV loaded using encoding: %s", encoding)
             return df
 
         except UnicodeDecodeError as error:
@@ -78,7 +82,7 @@ def remove_invalid_records(df: pd.DataFrame) -> pd.DataFrame:
     ].copy()
 
     removed_rows = initial_rows - len(df)
-    print(f"Invalid or duplicated records removed: {removed_rows}")
+    logger.info("Invalid or duplicated records removed: %d", removed_rows)
 
     return df
 
@@ -110,6 +114,8 @@ def run_data_ingestion(csv_path: str) -> pd.DataFrame:
     df = remove_invalid_records(df)
     df = build_review_text(df)
 
+    logger.info("Data ingestion completed. Rows: %d", df.shape[0])
+
     return df
 
 
@@ -118,18 +124,8 @@ def main() -> None:
 
     df = run_data_ingestion(csv_path)
 
-    print("CSV loaded and validated successfully.")
-    print(f"Rows: {df.shape[0]}")
-    print(f"Columns: {df.shape[1]}")
-
-    print("\nColumns used for analysis:")
-    print(df.columns.tolist())
-
-    print("\nText fields sample:")
-    print(df[["headline", "pros", "cons", "review_text"]].head())
-
-    print("\nData types:")
-    print(df.dtypes)
+    logger.info("Columns: %s", df.columns.tolist())
+    logger.info("Sample review_text: %s", df["review_text"].iloc[0])
 
 
 if __name__ == "__main__":

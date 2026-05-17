@@ -3,6 +3,10 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from logger import get_logger
+
+
+logger = get_logger(__name__)
 
 REQUIRED_EVALUATION_COLUMNS = [
     "vader_sentiment",
@@ -82,6 +86,8 @@ def save_sentiment_distribution_plot(
     plt.savefig(output_file)
     plt.close()
 
+    logger.info("Sentiment distribution plot saved to: %s", output_file)
+
     return output_file
 
 
@@ -108,6 +114,8 @@ def save_evaluation_report(
 
     output_file.write_text("\n".join(report), encoding="utf-8")
 
+    logger.info("Evaluation report saved to: %s", output_file)
+
     return output_file
 
 
@@ -127,18 +135,15 @@ def run_evaluation(
     distribution_df = build_sentiment_distribution(df)
     comparison_table = build_model_comparison_table(df)
 
-    report_path = save_evaluation_report(
+    save_evaluation_report(
         agreement_rate=agreement_rate,
         distribution_df=distribution_df,
         comparison_table=comparison_table,
     )
 
-    figure_path = save_sentiment_distribution_plot(distribution_df)
+    save_sentiment_distribution_plot(distribution_df)
 
-    print("Evaluation completed successfully.")
-    print(f"Agreement rate: {agreement_rate:.4f}")
-    print(f"Report saved to: {report_path}")
-    print(f"Figure saved to: {figure_path}")
+    logger.info("Evaluation completed. Agreement rate: %.4f", agreement_rate)
 
 
 def main() -> None:
